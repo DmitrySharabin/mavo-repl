@@ -32,7 +32,7 @@
 				}
 			});
 
-			this.replTarget = $(".repl-target", this.element);
+			this.replTarget = $(".repl-target", this.element) || $.create({ inside: this.element, className: "repl-target" });
 
 			if (this.editors.css) {
 				this.style = $.create("style", {
