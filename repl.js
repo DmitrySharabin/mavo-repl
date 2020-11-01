@@ -12,7 +12,6 @@
 
 			$$("textarea", this.element).forEach(textarea => {
 				textarea.spellcheck = false;
-				textarea.value = Prism.plugins.NormalizeWhitespace.normalize(textarea.value);
 				const editor = new Prism.Live(textarea);
 				const id = editor.lang;
 
