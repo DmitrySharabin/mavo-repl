@@ -200,6 +200,12 @@ pre.prism-live {
 	color: hsla(220, 10%, 90%, 1);
 }
 
+pre[class*="language-"].line-numbers {
+	position: relative;
+	padding-left: 3.5em;
+	counter-reset: linenumber;
+}
+
 .prism-live label {
 	position: absolute;
 	top: .6rem;

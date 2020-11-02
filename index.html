@@ -8,6 +8,7 @@
 
 	<!-- Prism -->
 	<link rel="stylesheet" href="./theme.css">
+	<link rel="stylesheet" href="https://prismjs.com/plugins/line-numbers/prism-line-numbers.css">
 	<link href="https://live.prismjs.com/prism-live.css" rel="stylesheet">
 
 	<!-- Mavo -->
@@ -20,13 +21,14 @@
 </head>
 
 <body>
-	<textarea class="language-html"><!-- Your Mavo app goes here --></textarea>
-	<textarea class="language-css">/* Styles for your Mavo app go here */</textarea>
+	<textarea class="language-html line-numbers"></textarea>
+	<textarea class="language-css line-numbers"></textarea>
 	<div class="repl-target"></div>
 
 	<script src="//get.mavo.io/mavo.min.js"></script>
 	<script src="./incrementable/incrementable.js"></script>
 	<script src="https://prismjs.com/prism.js"></script>
+	<script src="https://prismjs.com/plugins/line-numbers/prism-line-numbers.js"></script>
 	<script src="https://live.prismjs.com/src/prism-live.js?load=markup,css"></script>
 	<script src="./repl.js"></script>
 </body>
