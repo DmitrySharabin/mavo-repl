@@ -39,6 +39,21 @@
 				});
 			}
 
+			this.controls = $.create({
+				className: "repl-controls",
+				after: this.editorContainer
+			});
+
+			$.create("a", {
+				textContent: "Download",
+				href: "",
+				download: "app.html",
+				onclick: evt => {
+					evt.target.href = `data:text/html,${this.getHTMLPage()}`;
+				},
+				inside: this.controls
+			});
+
 			const editorKeys = Object.keys(this.editors);
 
 			if (editorKeys.length > 1) {
@@ -124,6 +139,31 @@
 					rule.selectorText = selector.split(",").map(s => `${scope} ${s}`).join(", ");
 				}
 			}
+		}
+
+		get html() {
+			return this.editors.html.textarea.value;
+		}
+
+		get css() {
+			return this.editors.css.textarea.value;
+		}
+
+		getHTMLPage(title = "Mavo App") {
+			return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${title}</title>
+${this.css ? `<style>
+${this.css}
+</style>` : ""}
+</head>
+<body>
+${this.html}
+</body>
+</html>`;
 		}
 	}
 
