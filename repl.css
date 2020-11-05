@@ -96,7 +96,7 @@ body {
 	cursor: pointer;
 }
 
-.repl-controls > [href]:hover {
+.repl-controls > [href]:not(:hover):not(:focus) {
 	opacity: .6;
 }
 
