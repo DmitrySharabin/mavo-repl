@@ -69,6 +69,7 @@ body {
 .repl-controls {
 	grid-area: controls;
 	display: flex;
+	gap: 0.2em;
 	padding: .3em;
 	font-size: 60%;
 	line-height: 1.5;
@@ -78,11 +79,19 @@ body {
 	display: none;
 }
 
-.repl-controls > * {
+.repl-controls * {
 	all: unset;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-shrink: 0;
 }
 
-.repl-controls > *,
+.repl-controls form {
+	display: contents;
+}
+
+.repl-controls *,
 .prism-live label {
 	min-width: 1em;
 	padding: .1em .4em;
@@ -90,13 +99,18 @@ body {
 	margin: 0 .2em;
 	box-shadow: 0 0 1px inset;
 	text-align: center;
-	font: bold 1.2em/1.5 var(--font-heading, var(--heading-font, "Helvetica Neue", Segoe UI, sans-serif));
+	font: bold 1em/1.5 var(--font-heading, var(--heading-font, "Helvetica Neue", Segoe UI, sans-serif));
 	color: inherit;
 	text-decoration: none;
 	cursor: pointer;
 }
 
-.repl-controls > [href]:not(:hover):not(:focus) {
+.repl-controls button {
+	font-size: 100%;
+}
+
+.repl-controls [href]:not(:hover):not(:focus),
+.repl-controls button:not(:hover):not(:focus) {
 	opacity: .6;
 }
 

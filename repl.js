@@ -54,6 +54,35 @@
 				inside: this.controls
 			});
 
+			// Open in CodePen button
+			$.create("form", {
+				action: "https://codepen.io/pen/define",
+				method: "POST",
+				target: "_blank",
+				contents: [
+					{
+						tag: "input",
+						type: "hidden",
+						name: "data"
+					},
+					{
+						tag: "button",
+						textContent: "Open in CodePen"
+					}
+				],
+				onsubmit: evt => {
+					evt.target.children[0].value = JSON.stringify({
+						title: "Mavo App",
+						html: this.html,
+						css: this.css,
+						"css_external": "https://get.mavo.io/mavo.min.css",
+						"js_external": "https://get.mavo.io/mavo.min.js",
+						editors: "1100"
+					});
+				},
+				inside: this.controls
+			});
+
 			const editorKeys = Object.keys(this.editors);
 
 			if (editorKeys.length > 1) {
