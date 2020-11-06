@@ -207,6 +207,18 @@ ${this.html}
 		]
 	};
 
-	new Repl(document.body);
+	const repl = new Repl(document.body);
+
+	// We can pass apps through URLs.
+	// It might be useful if we decide to use this playground for our demos from the Mavo website.
+	const currentURL = new URL(location.href);
+	for (const param of currentURL.searchParams) {
+		const lang = param[0];
+
+		if (["html", "css"].includes(lang)) {
+			repl.editors[lang].textarea.value = param[1];
+			repl.output(lang);
+		}
+	}
 
 })(Bliss, Bliss.$);
