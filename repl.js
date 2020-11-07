@@ -212,11 +212,12 @@ ${this.html}
 	// We can pass apps through URLs.
 	// It might be useful if we decide to use this playground for our demos from the Mavo website.
 	const currentURL = new URL(location.href);
-	for (const param of currentURL.searchParams) {
-		const lang = param[0];
+	const params = currentURL.searchParams;
+	const languages = ["html", "css"];
 
-		if (["html", "css"].includes(lang)) {
-			repl.editors[lang].textarea.value = param[1];
+	for (const lang of languages) {
+		if (params.has(lang)) {
+			repl.editors[lang].textarea.value = params.get(lang);
 			repl.output(lang);
 		}
 	}
