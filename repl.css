@@ -26,15 +26,7 @@
 	--accent3-light: var(--c3-light);
 	--accent4-light: var(--c4-light);
 
-	/* Bright colors */
-	--color-magenta: #f06;
-	--color-orange: orange;
-	--color-green: yellowgreen;
-	--color-aqua: hsl(191, 100%, 40%);
-	--color-yellow: gold;
-
-	--font-mono: "Dank Mono", "Operator Mono", Consolas, Monaco, "Andale Mono",
-		monospace;
+	--font-mono: "Dank Mono", "Operator Mono", Consolas, Monaco, "Andale Mono", monospace;
 	--font-body: "Helvetica Neue", Segoe UI, sans-serif;
 	--font-heading: var(--font-body);
 }
@@ -45,25 +37,24 @@
 
 body {
 	--padding: 1.5rem;
+	--font-size-multiplier: 1.4;
 	margin: 0;
 	height: 100vh;
-	overscroll-behavior: contain;
 	padding: 0;
 	display: grid;
-	font-size: 200%;
+	font-size: 110%;
 	align-items: stretch;
 	background: hsl(220,10%,95%);
-	grid-template: "editor controls" 1.5em /* used to be auto but mysteriously broke one day */
+	grid-template: "editor controls" auto
 	               "editor target" minmax(0, 1fr) / auto minmax(0, 1fr);
 	padding-right: var(--padding);
 }
 
 .repl-target {
 	display: flex;
-	align-items: center;
-	justify-content: center;
 	flex-flow: column;
 	grid-area: target;
+	overflow: auto;
 }
 
 .repl-controls {
@@ -71,7 +62,7 @@ body {
 	display: flex;
 	gap: 0.2em;
 	padding: .3em;
-	font-size: 60%;
+	font-size: 80%;
 	line-height: 1.5;
 }
 
@@ -79,40 +70,40 @@ body {
 	display: none;
 }
 
-.repl-controls * {
-	all: unset;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-shrink: 0;
-}
+	.repl-controls * {
+		all: unset;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-shrink: 0;
+	}
 
-.repl-controls form {
-	display: contents;
-}
+	.repl-controls form {
+		display: contents;
+	}
 
-.repl-controls *,
-.prism-live label {
-	min-width: 1em;
-	padding: .1em .4em;
-	border-radius: .2em;
-	margin: 0 .2em;
-	box-shadow: 0 0 1px inset;
-	text-align: center;
-	font: bold 1em/1.5 var(--font-heading, var(--heading-font, "Helvetica Neue", Segoe UI, sans-serif));
-	color: inherit;
-	text-decoration: none;
-	cursor: pointer;
-}
+	.repl-controls *,
+	.prism-live label {
+		min-width: 1em;
+		padding: .1em .4em;
+		border-radius: .2em;
+		margin: 0 .2em;
+		box-shadow: 0 0 1px inset;
+		text-align: center;
+		font: bold 1.2em/1.5 var(--font-heading, var(--heading-font, "Helvetica Neue", Segoe UI, sans-serif));
+		color: inherit;
+		text-decoration: none;
+		cursor: pointer;
+	}
 
-.repl-controls button {
-	font-size: 100%;
-}
+	.repl-controls button {
+		font-size: 100%;
+	}
 
-.repl-controls [href]:not(:hover):not(:focus),
-.repl-controls button:not(:hover):not(:focus) {
-	opacity: .6;
-}
+	.repl-controls [href]:not(:hover):not(:focus),
+	.repl-controls button:not(:hover):not(:focus) {
+		opacity: .6;
+	}
 
 .editor-container {
 	display: flex;
@@ -175,7 +166,7 @@ div.prism-live {
 	color: inherit;
 	font-size: calc(var(--font-size-multiplier, 1) * 100%);
 	line-height: 1.5em;
-	max-height: 100vh;
+	max-height: calc(100vh - 1.6em);
 	transition: .2s;
 	transition-property: max-height, flex;
 	background: hsl(200, 10%, 15%);
@@ -212,7 +203,7 @@ pre[class*="language-"].line-numbers {
 	z-index: 1;
 	color: white;
 	background: hsl(30, 100%, 50%);
-	font-size: 1.2rem;
+	font-size: 0.72em;
 	text-transform: uppercase;
 	opacity: .5;
 }
