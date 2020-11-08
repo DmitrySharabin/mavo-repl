@@ -2,6 +2,8 @@
 	const _ = Repl = class Repl {
 		constructor(element) {
 			this.element = element;
+			// Do we have changes, if any, that weren't being downloaded or sent to CodePen?
+			this.dirty = false;
 
 			this.editors = {};
 
@@ -20,11 +22,15 @@
 				editor.realtime = !textarea.classList.contains("no-realtime");
 
 				if (editor.realtime) {
-					textarea.addEventListener("input", _ => this.output(id));
+					textarea.addEventListener("input", _ => {
+						this.dirty = true;
+						this.output(id);
+					});
 				}
 				else {
 					textarea.addEventListener("keyup", evt => {
 						if (evt.key == "Enter" && (evt.ctrlKey || evt.metaKey)) {
+							this.dirty = true;
 							this.output(id);
 						}
 					});
@@ -49,6 +55,7 @@
 				href: "",
 				download: "app.html",
 				onclick: evt => {
+					this.dirty = false;
 					evt.target.href = `data:text/html,${this.getHTMLPage()}`;
 				},
 				inside: this.controls
@@ -71,6 +78,7 @@
 					}
 				],
 				onsubmit: evt => {
+					this.dirty = false;
 					evt.target.children[0].value = JSON.stringify({
 						title: "Mavo App",
 						html: this.html,
@@ -221,5 +229,12 @@ ${this.html}
 			repl.output(lang);
 		}
 	}
+
+	// Warn a user if there are unsaved changes
+	window.addEventListener("beforeunload", evt => {
+		if (repl.dirty) {
+			evt.returnValue = "There are some changes you might don't want to lose!";
+		}
+	});
 
 })(Bliss, Bliss.$);
