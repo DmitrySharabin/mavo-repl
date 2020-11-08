@@ -135,7 +135,7 @@
 			return code;
 		}
 
-		output(id) {
+		output = _.debounce(function (id) {
 			const editor = this.editors[id];
 			let code = editor.textarea.value;
 
@@ -153,7 +153,26 @@
 					_.scopeRule(rule, scope);
 				}
 			}
-		}
+		}, 250);
+
+		// Credit: https://davidwalsh.name/javascript-debounce-function
+		// Returns a function, that, as long as it continues to be invoked, will not
+		// be triggered. The function will be called after it stops being called for
+		// N milliseconds.
+		static debounce(func, wait) {
+			let timeout;
+
+			return function () {
+				const context = this, args = arguments;
+				const later = function () {
+					timeout = null;
+					func.apply(context, args);
+				};
+
+				clearTimeout(timeout);
+				timeout = setTimeout(later, wait);
+			};
+		};
 
 		static scopeRule(rule, scope) {
 			const selector = rule.selectorText;
