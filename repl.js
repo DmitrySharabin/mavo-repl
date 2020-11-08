@@ -113,7 +113,7 @@
 					}
 
 					if (this.html || this.css) {
-						prompt("You can copy and share this URL", urlToShare);
+						prompt("You can copy and share this URL:", urlToShare);
 					}
 				},
 				inside: this.controls
