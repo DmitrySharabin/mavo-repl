@@ -101,6 +101,10 @@ body {
 		font-size: 100%;
 	}
 
+	.repl-controls [type=button] {
+		font-size: 120%;
+	}
+
 	.repl-controls [href]:not(:hover):not(:focus),
 	.repl-controls button:not(:hover):not(:focus) {
 		opacity: .6;

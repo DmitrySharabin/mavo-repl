@@ -98,6 +98,27 @@
 				inside: this.controls
 			});
 
+			$.create("button", {
+				type: "button",
+				textContent: "Share",
+				onclick: _ => {
+					const urlToShare = new URL(location.href);
+
+					if (this.html) {
+						urlToShare.searchParams.set("html", this.html);
+					}
+
+					if (this.css) {
+						urlToShare.searchParams.set("css", this.css);
+					}
+
+					if (this.html || this.css) {
+						prompt("You can copy and share this URL", urlToShare);
+					}
+				},
+				inside: this.controls
+			});
+
 			const editorKeys = Object.keys(this.editors);
 
 			if (editorKeys.length > 1) {
