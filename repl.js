@@ -231,6 +231,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+${/\<[^>]+\smv-app(=|\s+|>)/g.test(this.html) ? `<link href="https://get.mavo.io/mavo.min.css" rel="stylesheet">
+<script src="https://get.mavo.io/mavo.min.js"></script>` : ""}
 <title>${title}</title>
 ${this.css ? `<style>
 ${this.css}
