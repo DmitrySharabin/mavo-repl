@@ -51,6 +51,13 @@
 			});
 
 			$.create("a", {
+				textContent: "🏠",
+				title: "The Mavo website",
+				href: "https://mavo.io/",
+				inside: this.controls
+			});
+
+			$.create("a", {
 				textContent: "Download",
 				href: "",
 				download: "app.html",
