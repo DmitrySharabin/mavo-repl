@@ -150,6 +150,19 @@
 
 			if (id === "html") {
 				this.replTarget.innerHTML = code;
+
+				// Check whether we have Mavo apps, and if so, initialize them.
+				if (/\<[^>]+\smv-app(=|\s+|>)/g.test(code)) {
+					// I'm not sure whether it's efficient. I hope the garbage collector can manage leftovers.
+					Mavo.all = {};
+					Object.defineProperty(Mavo.all, "length", {
+						get: function () {
+							return Object.keys(this).length;
+						}
+					});
+
+					Mavo.init(this.replTarget);
+				}
 			}
 			else if (id === "css") {
 				const scope = ".repl-target ";
