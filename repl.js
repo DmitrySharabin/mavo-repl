@@ -101,7 +101,7 @@
 			const editorKeys = Object.keys(this.editors);
 
 			if (editorKeys.length > 1) {
-				// More than 1 editors, need the ability to toggle
+				// More than 1 editors, need the ability to toggle.
 				editorKeys.forEach((id, i) => {
 					const editor = this.editors[id];
 
@@ -185,8 +185,8 @@
 			const selector = rule.selectorText;
 
 			if (rule.cssRules) {
-				// If this rule contains rules, scope those too
-				// Mainly useful for @supports and @media
+				// If this rule contains rules, scope those too.
+				// Mainly useful for @supports and @media.
 				for (const innerRule of rule.cssRules) {
 					_.scopeRule(innerRule, scope);
 				}
@@ -256,7 +256,7 @@ ${this.html}
 		}
 	}
 
-	// Warn a user if there are unsaved changes
+	// Warn a user if there are unsaved changes.
 	window.addEventListener("beforeunload", evt => {
 		if (repl.dirty) {
 			evt.returnValue = "There are some changes you might don't want to lose!";
