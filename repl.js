@@ -24,14 +24,14 @@
 				if (editor.realtime) {
 					textarea.addEventListener("input", _ => {
 						this.dirty = true;
-						this.output(id);
+						this.outputDebounced(id);
 					});
 				}
 				else {
 					textarea.addEventListener("keyup", evt => {
 						if (evt.key == "Enter" && (evt.ctrlKey || evt.metaKey)) {
 							this.dirty = true;
-							this.output(id);
+							this.outputDebounced(id);
 						}
 					});
 				}
@@ -163,7 +163,7 @@
 			return code;
 		}
 
-		output = _.debounce(function (id) {
+		output(id) {
 			const editor = this.editors[id];
 			let code = editor.textarea.value;
 
@@ -194,7 +194,9 @@
 					_.scopeRule(rule, scope);
 				}
 			}
-		}, 250);
+		}
+
+		outputDebounced = _.debounce(this.output, 250);
 
 		// Credit: https://davidwalsh.name/javascript-debounce-function
 		// Returns a function, that, as long as it continues to be invoked, will not
