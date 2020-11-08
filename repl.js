@@ -1,3 +1,10 @@
+/**
+ * Mavo Playground (REPL)
+ *
+ * Based on awesome live-demo plugin for Inspire.js by Lea Verou:
+ * https://github.com/LeaVerou/inspire.js/tree/master/plugins/live-demo
+ */
+
 (function ($, $$) {
 	const _ = Repl = class Repl {
 		constructor(element) {
