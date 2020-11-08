@@ -298,6 +298,11 @@ ${this.html}
 	window.addEventListener("beforeunload", evt => {
 		if (repl.dirty) {
 			evt.returnValue = "There are some changes you might don't want to lose!";
+
+			// Clear the editors.
+			for (const lang of languages) {
+				repl.editors[lang].textarea.value = "";
+			}
 		}
 	});
 
