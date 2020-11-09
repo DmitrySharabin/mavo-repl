@@ -104,22 +104,6 @@
 					editors: "1100"
 				});
 			});
-
-			document.querySelector("button.share", this.controls).addEventListener("click", _ => {
-				const urlToShare = new URL(location.href);
-
-				if (this.html) {
-					urlToShare.searchParams.set("html", this.html);
-				}
-
-				if (this.css) {
-					urlToShare.searchParams.set("css", this.css);
-				}
-
-				if (this.html || this.css) {
-					prompt("You can copy and share this URL:", urlToShare);
-				}
-			});
 		}
 
 		// Getters
