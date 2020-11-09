@@ -307,7 +307,7 @@ ${this.html}
 
 	// Warn a user if there are unsaved changes.
 	window.addEventListener("beforeunload", evt => {
-		if (repl.dirty) {
+		if (repl.dirty && (repl.html || repl.css)) {
 			evt.returnValue = "There are some changes you might don't want to lose!";
 
 			// Clear the editors.
