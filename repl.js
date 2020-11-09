@@ -75,10 +75,22 @@
 			// Controls
 			this.controls = document.querySelector(".repl-controls", this.element);
 
-			document.querySelector("a.download", this.controls).addEventListener("click", evt => {
+			// Create zip download
+			document.querySelector("a.download", this.controls).onclick = evt => {
 				this.dirty = false;
-				evt.target.href = `data:text/html,${this.getHTMLPage()}`;
-			});
+
+				const zip = new JSZip();
+				zip.file("index.html", this.getHTMLPage({ linkCSS: true }));
+				zip.file("style.css", this.css);
+
+				zip.generateAsync({ type: "blob" }).then(function (blob) {
+					evt.target.href = URL.createObjectURL(blob);
+					evt.target.onclick = null;
+					evt.target.click();
+				});
+
+				evt.preventDefault();
+			};
 
 			document.querySelector("form", this.controls).addEventListener("submit", evt => {
 				if (!this.html && !this.css) {
@@ -154,16 +166,17 @@
 			};
 		};
 
-		getHTMLPage(title = "Mavo App") {
+		getHTMLPage(o = { linkCSS: false }) {
 			return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-${/\<[^>]+\smv-app(=|\s+|>)/g.test(this.html) ? `<link href="https://get.mavo.io/mavo.min.css" rel="stylesheet">
+${/\<[^>]+\smv-app(=|\s+|>)/g.test(this.html) ? `<link href="https://get.mavo.io/mavo.min.css" rel="stylesheet" />
 <script src="https://get.mavo.io/mavo.min.js"></script>` : ""}
-<title>${title}</title>
-${this.css ? `<style>
+${o.linkCSS ? `<link href="style.css" rel="stylesheet" />` : ""}
+<title>Mavo App</title>
+${(!o.linkCSS) ? `<style>
 ${this.css}
 </style>` : ""}
 </head>
