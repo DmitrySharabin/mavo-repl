@@ -51,11 +51,17 @@ body {
 	padding-right: var(--padding);
 }
 
+iframe {
+	justify-self: stretch;
+	border: 0;
+	box-sizing: border-box;
+	margin: 0;
+}
+
 .repl-target {
 	display: flex;
 	flex-flow: column;
 	grid-area: target;
-	overflow: auto;
 }
 
 .repl-controls {
@@ -65,10 +71,6 @@ body {
 	padding: .3em;
 	font-size: 80%;
 	line-height: 1.5;
-}
-
-.repl-controls:empty {
-	display: none;
 }
 
 	.repl-controls * {

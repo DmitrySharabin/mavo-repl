@@ -31,26 +31,23 @@
 				if (editor.realtime) {
 					textarea.addEventListener("input", _ => {
 						this.dirty = true;
-						this.outputDebounced(id);
+						this.outputDebounced();
 					});
 				}
 				else {
 					textarea.addEventListener("keyup", evt => {
 						if (evt.key == "Enter" && (evt.ctrlKey || evt.metaKey)) {
 							this.dirty = true;
-							this.outputDebounced(id);
+							this.outputDebounced();
 						}
 					});
 				}
 			});
 
-			this.replTarget = $(".repl-target", this.element) || $.create({ inside: this.element, className: "repl-target" });
-
-			if (this.editors.css) {
-				this.style = $.create("style", {
-					start: this.element
-				});
-			}
+			this.iframe = $("iframe.repl-target", this.element) || $.create("iframe", {
+				className: "repl-target",
+				inside: this.element
+			});
 
 			this.controls = $.create({
 				className: "repl-controls",
@@ -156,62 +153,8 @@
 			}
 		}
 
-		fixCode(id, code) {
-			if (_.fixers[id] && _.fixers[id].length) {
-				for (const fixer of _.fixers[id]) {
-					const newCode = fixer(code);
-
-					if (newCode !== undefined) {
-						code = newCode;
-					}
-				}
-			}
-
-			return code;
-		}
-
-		async output(id) {
-			const editor = this.editors[id];
-			let code = editor.textarea.value;
-
-			code = this.fixCode(id, code);
-
-			if (id === "html") {
-				this.replTarget.innerHTML = code;
-
-				// Check whether we have Mavo apps, and if so, initialize them.
-				if (/\<[^>]+\smv-app(=|\s+|>)/g.test(code)) {
-					// I'm not sure whether it's efficient. I hope the garbage collector can manage leftovers.
-					Mavo.all = {};
-					Object.defineProperty(Mavo.all, "length", {
-						get: function () {
-							return Object.keys(this).length;
-						}
-					});
-
-					Mavo.ready = Mavo.thenAll([$.ready().then(() => Mavo.Plugins.load())]);
-					Mavo.inited = Mavo.promise();
-
-					// Init mavo. Async to give other scripts a chance to modify stuff.
-					await Mavo.defer();
-
-					await $.ready();
-
-					await Mavo.ready;
-
-					Mavo.init(this.replTarget);
-					Mavo.inited.resolve();
-				}
-			}
-			else if (id === "css") {
-				const scope = ".repl-target ";
-
-				this.style.textContent = code;
-
-				for (const rule of this.style.sheet.cssRules) {
-					_.scopeRule(rule, scope);
-				}
-			}
+		output() {
+			this.iframe.srcdoc = this.getHTMLPage();
 		}
 
 		outputDebounced = _.debounce(this.output, 250);
@@ -234,29 +177,6 @@
 				timeout = setTimeout(later, wait);
 			};
 		};
-
-		static scopeRule(rule, scope) {
-			const selector = rule.selectorText;
-
-			if (rule.cssRules) {
-				// If this rule contains rules, scope those too.
-				// Mainly useful for @supports and @media.
-				for (const innerRule of rule.cssRules) {
-					_.scopeRule(innerRule, scope);
-				}
-			}
-
-			if (selector && rule instanceof CSSStyleRule) {
-				const shouldScope = !(
-					selector.includes("#")  // don't do anything if the selector already contains an id
-					|| selector == ":root"
-				);
-
-				if (shouldScope && selector.indexOf(scope) !== 0) {
-					rule.selectorText = selector.split(",").map(s => `${scope} ${s}`).join(", ");
-				}
-			}
-		}
 
 		get html() {
 			return this.editors.html.textarea.value;
@@ -286,17 +206,6 @@ ${this.html}
 		}
 	}
 
-	Repl.fixers = {
-		markup: [],
-		css: [
-			code => {
-				if (!/\{[\S\s]+\}/.test(code.replace(/'[\S\s]+'/g, ""))) {
-					return code;
-				}
-			}
-		]
-	};
-
 	const repl = new Repl(document.body);
 
 	// We can pass apps through URLs.
@@ -308,9 +217,12 @@ ${this.html}
 	for (const lang of languages) {
 		if (params.has(lang)) {
 			repl.editors[lang].textarea.value = params.get(lang);
-			repl.output(lang);
 			currentURL.searchParams.delete(lang);
 		}
+	}
+
+	if (repl.html || repl.css) {
+		repl.output();
 	}
 
 	// Clear the address bar.
