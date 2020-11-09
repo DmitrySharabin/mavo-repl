@@ -1,28 +1,29 @@
 /**
  * Mavo Playground (REPL)
  *
- * Based on awesome live-demo plugin for Inspire.js by Lea Verou:
+ * Inspired by an awesome live-demo plugin for Inspire.js by Lea Verou:
  * https://github.com/LeaVerou/inspire.js/tree/master/plugins/live-demo
  */
 
-(function ($, $$) {
+(function () {
 	const _ = Repl = class Repl {
 		constructor(element) {
 			this.element = element;
+
 			// Do we have changes, if any, that weren't being downloaded or sent to CodePen?
 			this.dirty = false;
 
+			// Code editors
 			this.editors = {};
 
-			this.editorContainer = $.create({
-				className: "editor-container",
-				inside: this.element
-			});
+			this.editorContainer = document.querySelector(".editor-container", this.element);
 
-			$$("textarea", this.element).forEach(textarea => {
+			for (const textarea of document.querySelectorAll("textarea", this.element)) {
 				textarea.spellcheck = false;
 				const editor = new Prism.Live(textarea);
 				const id = editor.lang;
+
+				textarea.id = id;
 
 				this.editors[id] = editor;
 				this.editorContainer.append(editor.wrapper);
@@ -42,86 +43,7 @@
 						}
 					});
 				}
-			});
-
-			this.iframe = $("iframe.repl-target", this.element) || $.create("iframe", {
-				className: "repl-target",
-				inside: this.element
-			});
-
-			this.controls = $.create({
-				className: "repl-controls",
-				after: this.editorContainer
-			});
-
-			$.create("a", {
-				textContent: "🏠",
-				title: "The Mavo website",
-				href: "https://mavo.io/",
-				inside: this.controls
-			});
-
-			$.create("a", {
-				textContent: "Download",
-				href: "",
-				download: "app.html",
-				onclick: evt => {
-					this.dirty = false;
-					evt.target.href = `data:text/html,${this.getHTMLPage()}`;
-				},
-				inside: this.controls
-			});
-
-			// Open in CodePen button
-			$.create("form", {
-				action: "https://codepen.io/pen/define",
-				method: "POST",
-				target: "_blank",
-				contents: [
-					{
-						tag: "input",
-						type: "hidden",
-						name: "data"
-					},
-					{
-						tag: "button",
-						textContent: "Open in CodePen"
-					}
-				],
-				onsubmit: evt => {
-					this.dirty = false;
-					evt.target.children[0].value = JSON.stringify({
-						title: "Mavo App",
-						html: this.html,
-						css: this.css,
-						"css_external": "https://get.mavo.io/mavo.min.css",
-						"js_external": "https://get.mavo.io/mavo.min.js",
-						editors: "1100"
-					});
-				},
-				inside: this.controls
-			});
-
-			$.create("button", {
-				type: "button",
-				textContent: "Share",
-				onclick: _ => {
-					const urlToShare = new URL(location.href);
-
-					if (this.html) {
-						urlToShare.searchParams.set("html", this.html);
-					}
-
-					if (this.css) {
-						urlToShare.searchParams.set("css", this.css);
-					}
-
-					if (this.html || this.css) {
-						prompt("You can copy and share this URL:", urlToShare);
-					}
-				},
-				inside: this.controls
-			});
+			}
 
 			const editorKeys = Object.keys(this.editors);
 
@@ -130,13 +52,14 @@
 				editorKeys.forEach((id, i) => {
 					const editor = this.editors[id];
 
-					$.create("label", {
-						htmlFor: editor.textarea.id,
-						inside: editor.wrapper,
-						textContent: editor.lang,
-						tabIndex: "0",
-						onclick: _ => this.openEditor(id)
-					});
+					const label = document.createElement("label");
+					label.htmlFor = editor.textarea.id;
+					label.tabIndex = 0;
+					label.textContent = editor.lang;
+
+					label.addEventListener("click", _ => this.openEditor(id));
+
+					editor.wrapper.append(label);
 
 					editor.textarea.addEventListener("focus", _ => this.openEditor(id));
 
@@ -145,8 +68,57 @@
 					}
 				});
 			}
+
+			// Preview
+			this.iframe = document.querySelector("iframe.repl-target", this.element);
+
+			// Controls
+			this.controls = document.querySelector(".repl-controls", this.element);
+
+			document.querySelector("a.download", this.controls).addEventListener("click", evt => {
+				this.dirty = false;
+				evt.target.href = `data:text/html,${this.getHTMLPage()}`;
+			});
+
+			document.querySelector("form", this.controls).addEventListener("submit", evt => {
+				this.dirty = false;
+				evt.target.children[0].value = JSON.stringify({
+					title: "Mavo App",
+					html: this.html,
+					css: this.css,
+					"css_external": "https://get.mavo.io/mavo.min.css",
+					"js_external": "https://get.mavo.io/mavo.min.js",
+					editors: "1100"
+				});
+			});
+
+			document.querySelector("button.share", this.controls).addEventListener("click", _ => {
+				const urlToShare = new URL(location.href);
+
+				if (this.html) {
+					urlToShare.searchParams.set("html", this.html);
+				}
+
+				if (this.css) {
+					urlToShare.searchParams.set("css", this.css);
+				}
+
+				if (this.html || this.css) {
+					prompt("You can copy and share this URL:", urlToShare);
+				}
+			});
 		}
 
+		// Getters
+		get html() {
+			return this.editors.html.textarea.value;
+		}
+
+		get css() {
+			return this.editors.css.textarea.value;
+		}
+
+		// Methods
 		openEditor(id) {
 			for (const i in this.editors) {
 				this.editors[i].wrapper.classList.toggle("collapsed", i !== id);
@@ -177,14 +149,6 @@
 				timeout = setTimeout(later, wait);
 			};
 		};
-
-		get html() {
-			return this.editors.html.textarea.value;
-		}
-
-		get css() {
-			return this.editors.css.textarea.value;
-		}
 
 		getHTMLPage(title = "Mavo App") {
 			return `<!DOCTYPE html>
@@ -235,4 +199,4 @@ ${this.html}
 		}
 	});
 
-})(Bliss, Bliss.$);
+})();
