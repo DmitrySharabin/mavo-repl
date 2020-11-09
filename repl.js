@@ -170,7 +170,7 @@
 			return code;
 		}
 
-		output(id) {
+		async output(id) {
 			const editor = this.editors[id];
 			let code = editor.textarea.value;
 
@@ -189,7 +189,18 @@
 						}
 					});
 
+					Mavo.ready = Mavo.thenAll([$.ready().then(() => Mavo.Plugins.load())]);
+					Mavo.inited = Mavo.promise();
+
+					// Init mavo. Async to give other scripts a chance to modify stuff.
+					await Mavo.defer();
+
+					await $.ready();
+
+					await Mavo.ready;
+
 					Mavo.init(this.replTarget);
+					Mavo.inited.resolve();
 				}
 			}
 			else if (id === "css") {
