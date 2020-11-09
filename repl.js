@@ -81,6 +81,10 @@
 			});
 
 			document.querySelector("form", this.controls).addEventListener("submit", evt => {
+				if (!this.html && !this.css) {
+					evt.preventDefault();
+				}
+
 				this.dirty = false;
 				evt.target.children[0].value = JSON.stringify({
 					title: "Mavo App",
