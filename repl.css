@@ -177,6 +177,7 @@ div.prism-live {
 	transition-property: max-height, flex;
 	background: hsl(200, 10%, 15%);
 	tab-size: 2;
+	-moz-tab-size: 2;
 }
 
 textarea.prism-live {
