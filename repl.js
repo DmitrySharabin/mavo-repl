@@ -234,16 +234,12 @@ ${this.html}
 	for (const lang of languages) {
 		if (params.has(lang)) {
 			repl.editors[lang].textarea.value = params.get(lang);
-			currentURL.searchParams.delete(lang);
 		}
 	}
 
 	if (repl.html || repl.css) {
 		repl.output();
 	}
-
-	// Clear the address bar.
-	history.replaceState(null, "", currentURL);
 
 	// Warn a user if there are unsaved changes.
 	window.addEventListener("beforeunload", evt => {
