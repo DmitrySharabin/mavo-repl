@@ -123,6 +123,8 @@
 		}
 
 		output() {
+			URL.revokeObjectURL(this.iframe.src);
+
 			// Credit: https://dev.to/pulljosh/how-to-load-html-css-and-js-code-into-an-iframe-2blc
 			const blob = new Blob([this.getHTMLPage()], { type: "text/html" });
 
