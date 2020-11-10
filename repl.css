@@ -36,9 +36,9 @@
 }
 
 body {
-	--padding: 1.5rem;
+	--padding: 0.6rem;
 	--font-size-multiplier: 1.4;
-	--division: 60;
+	--division: 55;
 	margin: 0;
 	height: 100vh;
 	padding: 0;
@@ -216,7 +216,7 @@ pre[class*="language-"].line-numbers {
 }
 
 	.prism-live label:hover {
-		background:  hsl(15, 100%, 45%);
+		background: hsl(15, 100%, 45%);
 		opacity: 1;
 	}
 
@@ -228,5 +228,5 @@ pre[class*="language-"].line-numbers {
 	width: 14px;
 	z-index: 10;
 	cursor: col-resize;
-	background-color:hsl(227deg 12% 30%);
+	background-color: hsl(227deg 12% 30%);
 }
