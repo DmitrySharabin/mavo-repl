@@ -173,7 +173,57 @@ ${this.html}
 		}
 	}
 
+	// Credit: https://github.com/sveltejs/svelte-repl/blob/master/src/SplitPane.svelte
+	function drag(node, preview) {
+		const mousedown = evt => {
+			// Dragging only with the left mouse button.
+			if (evt.which !== 1) {
+				return;
+			}
+
+			evt.preventDefault();
+
+			// Pass events through the preview iframe.
+			preview.style.setProperty("pointer-events", "none");
+
+			const mousemove = evt => {
+				const editorContainer = document.querySelector(".editor-container");
+				const viewportWidth = document.documentElement.clientWidth;
+				const minX = parseInt(getComputedStyle(editorContainer).getPropertyValue("min-width"));
+				const maxX = viewportWidth - parseFloat(getComputedStyle(node).getPropertyValue("width"));
+
+				if (evt.clientX >= minX && evt.clientX <= maxX) {
+					const division = Math.round(evt.clientX / viewportWidth * 100);
+
+					document.body.style.setProperty("--division", division);
+				}
+			}
+
+			const onmouseup = () => {
+				window.removeEventListener('mousemove', mousemove, false);
+				window.removeEventListener('mouseup', onmouseup, false);
+
+				// Restore defaults.
+				preview.style.setProperty("pointer-events", "auto");
+			};
+
+			window.addEventListener('mousemove', mousemove, false);
+			window.addEventListener('mouseup', onmouseup, false);
+		}
+
+		node.addEventListener('mousedown', mousedown, false);
+
+		return {
+			destroy() {
+				node.removeEventListener('mousedown', mousedown, false);
+			}
+		};
+	}
+
 	const repl = new Repl(document.body);
+
+	// Add dragging feature to the resizer.
+	const resizer = drag(document.querySelector(".resizer"), repl.iframe);
 
 	// We can pass apps through URLs.
 	// It might be useful if we decide to use this playground for our demos from the Mavo website.
@@ -200,6 +250,9 @@ ${this.html}
 		if (repl.dirty && (repl.html || repl.css)) {
 			evt.returnValue = "There are some changes you might don't want to lose!";
 		}
+
+		// Remove event listener from the resizer.
+		resizer.destroy();
 	});
 
 })();
